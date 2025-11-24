@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Medium blue cosmic theme matching PepuStars website */
+    --background: 220 60% 25%;
+    --foreground: 210 100% 98%;
+
+    --card: 220 50% 30%;
+    --card-foreground: 210 100% 98%;
+
+    --popover: 220 55% 28%;
+    --popover-foreground: 210 100% 98%;
+
+    /* Teal-cyan primary - Pepu energy */
+    --primary: 196 67% 45%;
+    --primary-foreground: 210 100% 98%;
+
+    /* Coral pink secondary - complementary */
+    --secondary: 351 77% 63%;
+    --secondary-foreground: 210 100% 98%;
+
+    --muted: 220 40% 35%;
+    --muted-foreground: 210 60% 70%;
+
+    /* Gold accent for legendary elements */
+    --accent: 45 100% 60%;
+    --accent-foreground: 240 35% 6%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 100% 98%;
+
+    --border: 220 30% 40%;
+    --input: 220 40% 35%;
+    --ring: 196 67% 45%;
+
+    --radius: 0.75rem;
+
+    /* Rarity colors for card glows */
+    --rarity-common: 0 0% 60%;
+    --rarity-uncommon: 120 60% 50%;
+    --rarity-rare: 210 90% 60%;
+    --rarity-epic: 270 80% 65%;
+    --rarity-legendary: 45 100% 60%;
+
+    /* Game-specific gradients and effects */
+    --gradient-cosmic: linear-gradient(135deg, hsl(240 35% 6%) 0%, hsl(270 40% 10%) 50%, hsl(240 35% 6%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(240 35% 6%) 0%, hsl(260 45% 12%) 50%, hsl(280 40% 10%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(240 25% 12%) 0%, hsl(240 20% 15%) 100%);
+    --gradient-glass: linear-gradient(135deg, hsl(240 25% 12% / 0.6) 0%, hsl(260 30% 15% / 0.4) 100%);
+    
+    /* Glow effects */
+    --glow-primary: 0 0 30px hsl(196 67% 45% / 0.6);
+    --glow-secondary: 0 0 30px hsl(351 77% 63% / 0.6);
+    --glow-accent: 0 0 30px hsl(45 100% 60% / 0.7);
+    --glow-common: 0 0 15px hsl(0 0% 60% / 0.3);
+    --glow-uncommon: 0 0 15px hsl(120 60% 50% / 0.4);
+    --glow-rare: 0 0 20px hsl(210 90% 60% / 0.5);
+    --glow-epic: 0 0 25px hsl(270 80% 65% / 0.6);
+    --glow-legendary: 0 0 35px hsl(45 100% 60% / 0.8);
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+
+  .transform-style-3d {
+    transform-style: preserve-3d;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 3s linear infinite;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-falling-star {
+    animation: fallingStar linear infinite;
+  }
+
+  @keyframes fallingStar {
+    0% {
+      transform: translateY(-100vh) translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) translateX(-50px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .cosmic-bg {
+    background: radial-gradient(circle at 25% 25%, hsl(220 60% 30%) 0%, hsl(220 60% 25%) 50%, hsl(220 70% 20%) 100%);
+    position: relative;
+  }
+
+  .cosmic-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(2px 2px at 20px 30px, rgba(59, 130, 246, 0.6), transparent),
+      radial-gradient(2px 2px at 40px 70px, rgba(147, 51, 234, 0.5), transparent),
+      radial-gradient(1px 1px at 90px 40px, rgba(236, 72, 153, 0.4), transparent),
+      radial-gradient(1px 1px at 130px 80px, rgba(59, 130, 246, 0.5), transparent),
+      radial-gradient(2px 2px at 160px 30px, rgba(147, 51, 234, 0.3), transparent);
+    background-size: 200px 100px;
+    animation: twinkle 4s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+
+  @keyframes twinkle {
+    0% { opacity: 0.3; }
+    100% { opacity: 1; }
+  }
+}
