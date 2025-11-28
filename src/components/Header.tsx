@@ -1,4 +1,4 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { ConnectWithMetaMask } from './ConnectWithMetaMask';
 
 export const Header = () => {
   return (
@@ -39,99 +39,9 @@ export const Header = () => {
           </nav>
         </div>
 
-        {/* Wallet Button with State Handling */}
+        {/* Wallet Button with State Handling (MetaMask only) */}
         <div className="flex items-center">
-          <ConnectButton.Custom>
-            {({
-              account,
-              chain,
-              openAccountModal,
-              openChainModal,
-              openConnectModal,
-              authenticationStatus,
-              mounted,
-            }) => {
-              // 1. Ensure component is mounted and auth is ready
-              const ready = mounted && authenticationStatus !== 'loading';
-              const connected =
-                ready &&
-                account &&
-                chain &&
-                (!authenticationStatus ||
-                  authenticationStatus === 'authenticated');
-
-              return (
-                <div
-                  {...(!ready && {
-                    'aria-hidden': true,
-                    'style': {
-                      opacity: 0,
-                      pointerEvents: 'none',
-                      userSelect: 'none',
-                    },
-                  })}
-                >
-                  {(() => {
-                    // State 1: Not Connected -> Show Yellow Button
-                    if (!connected) {
-                      return (
-                        <button 
-                          onClick={openConnectModal}
-                          className="
-                            px-6 py-2 rounded-xl 
-                            bg-yellow-400 
-                            text-[#003366] 
-                            font-semibold
-                            shadow-md
-                            hover:bg-yellow-500 
-                            transition-all
-                          "
-                        >
-                          Connect Wallet
-                        </button>
-                      );
-                    }
-
-                    // State 2: Wrong Network -> Show Red Button
-                    if (chain.unsupported) {
-                      return (
-                        <button 
-                          onClick={openChainModal}
-                          className="px-4 py-2 rounded-xl bg-red-500 text-white font-bold shadow-md hover:bg-red-600 transition-all"
-                        >
-                          Wrong network
-                        </button>
-                      );
-                    }
-
-                    // State 3: Connected -> Show Chain & Account Info
-                    return (
-                      <div className="flex items-center gap-3">
-
-                        <button 
-                          onClick={openAccountModal} 
-                          type="button"
-                          className="                            
-                            px-6 py-2 rounded-xl 
-                            bg-yellow-400 
-                            text-[#003366] 
-                            font-semibold
-                            shadow-md
-                            hover:bg-yellow-500 
-                            transition-all"
-                        >
-                          {account.displayName}
-                          {account.displayBalance
-                            ? ` (${account.displayBalance})`
-                            : ''}
-                        </button>
-                      </div>
-                    );
-                  })()}
-                </div>
-              );
-            }}
-          </ConnectButton.Custom>
+          <ConnectWithMetaMask />
         </div>
 
       </div>

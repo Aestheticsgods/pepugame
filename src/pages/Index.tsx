@@ -9,7 +9,7 @@ import { CosmicBackground } from '@/components/CosmicBackground';
 import { useGameStore } from '@/store/gameStore';
 import { generateMockCaptains } from '@/utils/mockData';
 import { Button } from '@/components/ui/button';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { ConnectWithMetaMask } from '@/components/ConnectWithMetaMask';
 import { 
   DndContext, 
   DragEndEvent, 
@@ -117,17 +117,7 @@ if (!isConnected) {
               </div>
               
               <div className="flex flex-col sm:flex-row gap-6 items-center lg:items-start justify-center lg:justify-start pt-8">
-                <ConnectButton.Custom>
-                  {({ openConnectModal }) => (
-                    <Button
-                      onClick={openConnectModal}
-                      size="lg" 
-                      className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-foreground font-bold px-8 py-4 text-lg rounded-xl shadow-[0_0_30px_hsl(var(--primary)/0.5)] hover:shadow-[0_0_50px_hsl(var(--primary)/0.8)] transition-all duration-300 animate-pulse-glow"
-                    >
-                      🔗 Connect Wallet to Begin
-                    </Button>
-                  )}
-                </ConnectButton.Custom>
+                <ConnectWithMetaMask />
                 <Button 
                   size="lg" 
                   variant="outline"
