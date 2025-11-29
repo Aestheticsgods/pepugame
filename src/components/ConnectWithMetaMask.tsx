@@ -1,70 +1,90 @@
 import React from 'react';
-import { useConnect, useAccount, useDisconnect, useChainId, useChains, useSwitchChain } from 'wagmi';
+import { 
+  useConnect, 
+  useAccount, 
+  useDisconnect, 
+  useChainId, 
+  useChains, 
+  useSwitchChain 
+} from 'wagmi';
 
 function shorten(address = '') {
-  return address ? `${address.substring(0,6)}...${address.substring(address.length-4)}` : '';
+  return address ? `${address.slice(0, 6)}...${address.slice(-4)}` : '';
 }
 
-export const ConnectWithMetaMask: React.FC<{ buttonClass?: string }> = ({ buttonClass }) => {
-  const { connectors, connect, isLoading, pendingConnector } = useConnect();
+export const ConnectWithMetaMask: React.FC<{ buttonClass?: string; variant?: 'header' | 'hero' }> = ({
+  buttonClass,
+  variant = 'header',
+}) => {  const { connectors, connect, status, error } = useConnect();
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const chainId = useChainId();
   const availableChains = useChains();
   const { switchChain } = useSwitchChain();
 
-  // Try to find a MetaMask connector from the available connectors
-  const meta = connectors.find(c => (c.name && c.name.toLowerCase().includes('meta')) || c.id === 'metaMask');
+  const [pendingId, setPendingId] = React.useState<string | null>(null);
+  const meta = connectors.find(c => c.id === 'metaMask' || c.name === 'MetaMask');
+
+  const baseClassHeader =
+  'px-3 py-1 sm:px-6 sm:py-2 text-sm sm:text-base rounded-xl bg-yellow-400 text-[#003366] font-semibold shadow-md hover:bg-yellow-500 transition-all';
+
+const baseClassHero =
+  'px-8 py-2 text-lg rounded-xl bg-yellow-400 text-[#003366] font-semibold shadow-md hover:bg-yellow-500 transition-all';
+
+const finalClass = buttonClass ?? (variant === 'hero' ? baseClassHero : baseClassHeader);
+
 
   React.useEffect(() => {
-    // Debug: log available connectors to help diagnose when MetaMask isn't present
-    // Open browser console to view these logs when you click Connect
-    // eslint-disable-next-line no-console
-    console.log('wagmi connectors:', connectors.map(c => ({ id: c.id, name: c.name }))); 
-    // eslint-disable-next-line no-console
-    console.log('found meta connector?', !!meta, meta?.id ?? meta?.name);
+    if (process.env.NODE_ENV !== 'development') return;
+    console.log('connectors:', connectors.map(c => ({ id: c.id, name: c.name })));
+    console.log('MetaMask found:', !!meta);
   }, [connectors, meta]);
 
   const handleConnect = async () => {
-    if (!meta) return alert('MetaMask connector not available in this environment.');
+    if (!meta) {
+      alert('MetaMask not detected. Please install the browser extension.');
+      return;
+    }
+
     try {
+      setPendingId(meta.id);
       await connect({ connector: meta });
     } catch (err) {
-      // connect will surface its own errors; show a simple alert for now
       console.error(err);
-      alert('Failed to connect MetaMask. See console for details.');
+      alert('Failed to connect MetaMask.');
+    } finally {
+      setPendingId(null);
     }
   };
 
-  // determine if the current chain is supported by the app
-  const currentChain = availableChains?.find((c: any) => c.id === chainId);
+  const currentChain = availableChains.find(c => c.id === chainId);
   const unsupported = !!(chainId && !currentChain);
 
   if (!isConnected) {
     return (
-      <div>
-        <button
-          onClick={handleConnect}
-          className={buttonClass ?? 'px-6 py-2 rounded-xl bg-yellow-400 text-[#003366] font-semibold shadow-md hover:bg-yellow-500 transition-all'}
-          disabled={isLoading}
-        >
-          {isLoading && pendingConnector?.id === meta?.id ? 'Connecting...' : 'Connect Wallet'}
-        </button>
-      </div>
+      <button
+        onClick={handleConnect}
+        className={finalClass}
+        disabled={status === 'pending'}
+      >
+        {status === 'pending' && pendingId === meta?.id ? 'Connecting...' : 'Connect Wallet'}
+      </button>
     );
   }
 
-  // Connected state
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2 sm:gap-3">
       {unsupported ? (
         <button
-          onClick={() => {
-            // try to switch to mainnet (1) if available
-            if (switchChain) switchChain(1);
-            else alert('Please switch network in your wallet.');
+          onClick={async () => {
+            try {
+              await switchChain({ chainId: 1 });
+            } catch (e) {
+              console.error(e);
+              alert('Could not switch network. Please change it manually in MetaMask.');
+            }
           }}
-          className={buttonClass ?? 'px-4 py-2 rounded-xl bg-red-500 text-white font-bold shadow-md hover:bg-red-600 transition-all'}
+          className={finalClass}
         >
           Wrong network
         </button>
@@ -72,14 +92,15 @@ export const ConnectWithMetaMask: React.FC<{ buttonClass?: string }> = ({ button
         <>
           <button
             onClick={() => navigator.clipboard?.writeText(address ?? '')}
-            className={buttonClass ?? 'px-6 py-2 rounded-xl bg-yellow-400 text-[#003366] font-semibold shadow-md hover:bg-yellow-500 transition-all'}
+            className={finalClass}
             title="Click to copy address"
           >
             {shorten(address)}
           </button>
+
           <button
             onClick={() => disconnect()}
-            className="px-3 py-2 rounded-xl bg-[#222] text-white font-semibold shadow-sm hover:opacity-90 transition-all"
+            className="px-2 py-1 sm:px-3 sm:py-2 text-sm sm:text-base rounded-xl bg-[#222] text-white font-semibold shadow-sm hover:opacity-90 transition-all"
           >
             Disconnect
           </button>

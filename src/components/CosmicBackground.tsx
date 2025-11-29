@@ -20,6 +20,7 @@ export const CosmicBackground: React.FC<CosmicBackgroundProps> = ({
             className="absolute animate-falling-star"
             style={{
               left: `${Math.random() * 100}%`,
+              top: `${-20 - Math.random() * 20}%`,
               fontSize: `${Math.random() * 12 + 16}px`,
               animationDelay: `${Math.random() * 12}s`,
               animationDuration: `${6 + Math.random() * 4}s`,

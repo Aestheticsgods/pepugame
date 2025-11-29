@@ -27,7 +27,7 @@ export const Hand = () => {
         }`}
       >
         <p className="text-center text-muted-foreground pointer-events-none">
-          Your hand is empty. Drag cards here or select them from the deck below.
+          Your hand is empty. Swipe to drag cards here or select them from the deck below.
         </p>
       </div>
     );
@@ -49,16 +49,23 @@ export const Hand = () => {
             // Added select-none and [&_img]:pointer-events-none to prevent native image dragging
             className="relative group select-none [&_img]:pointer-events-none"
           >
-            <CaptainCard captain={captain} isInHand />
-            <Button
-              variant="destructive"
-              size="sm"
-              // Re-enable pointer events for the button so it remains clickable
-              className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-auto"
-              onClick={() => removeFromHand(captain.id)}
-            >
-              Remove
-            </Button>
+            <CaptainCard 
+              captain={captain} 
+              isInHand 
+              showPowerLevel={false} // Hide power level in hand
+            />
+          <Button
+            variant="destructive"
+            size="sm"
+            className="absolute -top-2 -right-2 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity z-10 pointer-events-auto flex items-center justify-center"
+            onClick={() => removeFromHand(captain.id)}
+          >
+            {/* Desktop: full word */}
+            <span className="hidden sm:block">Remove</span>
+
+            {/* Mobile: X icon */}
+            <span className="block sm:hidden text-lg leading-none">✕</span>
+          </Button>
           </div>
         ))}
       </div>

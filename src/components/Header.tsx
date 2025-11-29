@@ -3,13 +3,14 @@ import { ConnectWithMetaMask } from './ConnectWithMetaMask';
 export const Header = () => {
   return (
     <header className="sticky top-0 z-50 w-full bg-transparent border-none">
-      <div className="container flex h-20 items-center justify-between px-4">
+<div className="container flex h-20 items-center justify-between px-[4px] sm:px-4">
         
         {/* Logo */}
         <div className="flex items-center gap-4">
-          <div className="text-3xl font-bold text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">
-            PepuStars
-          </div>
+        <div className="text-xl sm:text-3xl font-bold text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">
+          PepuStars
+        </div>
+
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center gap-6 ml-8">
@@ -41,7 +42,7 @@ export const Header = () => {
 
         {/* Wallet Button with State Handling (MetaMask only) */}
         <div className="flex items-center">
-          <ConnectWithMetaMask />
+<ConnectWithMetaMask variant="header" />
         </div>
 
       </div>

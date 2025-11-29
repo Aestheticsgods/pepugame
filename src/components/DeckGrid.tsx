@@ -21,10 +21,11 @@ const DraggableCaptainCard = ({ captain, isSelected, toggleSelection, canDrawMor
   } : undefined;
 
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes} className="touch-none">
+    <div ref={setNodeRef} style={style} {...listeners} {...attributes} className="touch-pan-y">
       <CaptainCard
         captain={captain}
         isSelected={isSelected}
+        showClickHint={false}
         onClick={() => {
             // Check logic inside the wrapper to prevent click-through issues
             if (canDrawMore || isSelected) {

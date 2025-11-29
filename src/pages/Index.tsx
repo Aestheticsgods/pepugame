@@ -38,8 +38,8 @@ const Index = () => {
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 250,
-        tolerance: 5,
+        delay: 150,
+        tolerance: 10,
       },
     })
   );
@@ -81,7 +81,7 @@ if (!isConnected) {
             <div className="space-y-6 text-center lg:text-left order-1">
               <div className="space-y-4">
                 <div className="mb-8">
-                  <h1 className="text-6xl md:text-8xl font-black text-accent drop-shadow-[0_0_30px_hsl(var(--accent))] animate-fade-in leading-tight mb-4 flex items-end gap-4">
+                  <h1 className="text-6xl md:text-8xl font-black text-accent drop-shadow-[0_0_30px_hsl(var(--accent))] animate-fade-in leading-tight mb-8 flex items-end gap-4">
                     PepuStars
                     <span className="
                       text-xs 
@@ -117,7 +117,7 @@ if (!isConnected) {
               </div>
               
               <div className="flex flex-col sm:flex-row gap-6 items-center lg:items-start justify-center lg:justify-start pt-8">
-                <ConnectWithMetaMask />
+<ConnectWithMetaMask variant="hero" />
                 <Button 
                   size="lg" 
                   variant="outline"

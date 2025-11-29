@@ -7,7 +7,9 @@ interface CaptainCardProps {
   isSelected?: boolean;
   isInHand?: boolean;
   onClick?: () => void;
+  showClickHint?: boolean;
   className?: string;
+  showPowerLevel?: boolean;
 }
 
 const rarityGlowClasses = {
@@ -31,6 +33,8 @@ export const CaptainCard = ({
   isSelected, 
   isInHand, 
   onClick,
+  showClickHint = true,
+  showPowerLevel = true,
   className 
 }: CaptainCardProps) => {
   // Start with front side visible (false = front, true = back/stats)
@@ -93,73 +97,82 @@ export const CaptainCard = ({
           </div>
 
           {/* Card Info */}
-          <div className="p-5 h-2/5 flex flex-col justify-between gap-3">
+          <div className="p-3 h-2/5 flex flex-col justify-between gap-1 text-center">
             <div>
-              <h3 className="text-lg font-bold text-foreground mb-1 truncate">
+              <h3 className="text-xs sm:text-lg font-bold text-foreground mb-1 truncate">
                 {captain.name}
               </h3>
-              <p className="text-xs text-muted-foreground">
-                Click to view stats
-              </p>
+              {showClickHint && (
+                      <p className="text-xs text-muted-foreground">
+                        Click for stats
+                      </p>
+              )}
             </div>
             
             {/* Power Level Indicator */}
-            <div className="flex items-center justify-center bg-muted rounded-lg p-4 min-h-[56px]">
-              <div className="text-center">
-                <div className="text-xs text-muted-foreground">Power Level</div>
-                <div className="text-lg font-bold text-primary">
-                  {Math.round((captain.stats.power + captain.stats.flare + captain.stats.defense + captain.stats.instinct + captain.stats.luck + captain.stats.leadership) / 6)}
+            {showPowerLevel && (
+                <div className="flex items-center justify-center bg-muted rounded-lg">
+                  <div className="text-center">
+                    <div className="text-xs text-muted-foreground">Power Level</div>
+                    <div className="text-base font-bold text-primary">
+                      {Math.round((captain.stats.power + captain.stats.flare + captain.stats.defense + captain.stats.instinct + captain.stats.luck + captain.stats.leadership) / 6)}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Hover Hint */}
-          <div className="absolute bottom-2 left-0 right-0 text-center text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
-            Click to flip
+              )}
           </div>
         </div>
 
         {/* Card Back (Stats) */}
-        <div
-          className={cn(
-            'absolute w-full h-full backface-hidden [transform:rotateY(180deg)]',
-            'rounded-lg overflow-hidden',
-            'bg-card border-2',
-            rarityBorderClasses[captain.rarity],
-            rarityGlowClasses[captain.rarity],
-            'p-4 flex flex-col'
-          )}
-        >
-          <h3 className="text-lg font-bold text-foreground mb-4 text-center truncate">
-            {captain.name}
-          </h3>
+  <div
+  className={cn(
+    "absolute w-full h-full backface-hidden [transform:rotateY(180deg)]",
+    "rounded-lg overflow-hidden",
+    "bg-card border-2",
+    rarityBorderClasses[captain.rarity],
+    rarityGlowClasses[captain.rarity],
+    "p-2 sm:p-4 flex flex-col"
+  )}
+>
+
+ {/* Stats container – no scrolling on desktop */}
+  <div className="flex-1 flex flex-col justify-between gap-1 sm:gap-1 overflow-y-auto lg:overflow-visible pr-1">
+    {Object.entries(captain.stats).map(([stat, value]) => (
+      <div 
+        key={stat} 
+        className="flex flex-col items-center gap-1"
+      >
+        {/* Label - centered */}
+        <span className="text-[10px] sm:text-xs text-muted-foreground capitalize text-center">
+          {stat}
+        </span>
+
+        {/* Bar + Value */}
+        <div className="flex items-center gap-2 w-full">
           
-          <div className="flex-1 space-y-2.5 min-h-0 overflow-y-auto">
-            {Object.entries(captain.stats).map(([stat, value]) => (
-              <div key={stat} className="flex items-center justify-between gap-2">
-                <span className="text-xs text-muted-foreground capitalize min-w-0 flex-shrink-0">
-                  {stat}:
-                </span>
-                <div className="flex items-center gap-1 flex-1 min-w-0">
-                  <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden min-w-[40px]">
-                    <div
-                      className="h-full bg-primary transition-all duration-300"
-                      style={{ width: `${Math.min((value / 100) * 100, 100)}%` }}
-                    />
-                  </div>
-                  <span className="text-xs font-bold text-foreground w-6 text-right flex-shrink-0">
-                    {value}
-                  </span>
-                </div>
-              </div>
-            ))}
+          {/* Progress bar */}
+          <div className="flex-1 h-[6px] sm:h-2 bg-muted rounded-full overflow-hidden">
+            <div
+              className="h-full bg-primary transition-all duration-300"
+              style={{ width: `${Math.min(value, 100)}%` }}
+            />
           </div>
 
-          <div className="mt-3 text-center text-xs text-muted-foreground">
-            Click to flip back
-          </div>
+          {/* Value */}
+          <span className="text-[10px] sm:text-xs font-bold text-foreground w-6 text-right flex-shrink-0">
+            {value}
+          </span>
         </div>
+      </div>
+    ))}
+  </div>
+
+  {/* Footer */}
+  <div className="mt-2 sm:mt-3 text-center text-[10px] sm:text-xs text-muted-foreground">
+    Click to flip back
+  </div>
+</div>
+
       </div>
 
       {/* Selected Indicator */}
