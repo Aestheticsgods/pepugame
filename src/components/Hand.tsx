@@ -57,7 +57,7 @@ export const Hand = () => {
           <Button
             variant="destructive"
             size="sm"
-            className="absolute -top-2 -right-2 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity z-10 pointer-events-auto flex items-center justify-center"
+            className="absolute -top-2 -left-2 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity z-10 pointer-events-auto flex items-center justify-center"
             onClick={() => removeFromHand(captain.id)}
           >
             {/* Desktop: full word */}
